@@ -2,17 +2,19 @@
 // 1. POSTデータ取得
 //$name = filter_input( INPUT_GET, ","name" ); //こういうのもあるよ
 //$email = filter_input( INPUT_POST, "email" ); //こういうのもあるよ
-$title = $_POST["title"];
-$purpose = $_POST["purpose"];
-$finding = $_POST["finding"];
-$todo = $_POST["todo"];
-$review1 = $_POST["review1"];
-$review2 = $_POST["review2"];
 
-// 2. DB接続します（データベース以外はワンパターン）
+// 文字列作成(日付)
+$name = $_POST["name"];
+$email = $_POST{"email"};
+$naiyou = $_POST{"naiyou"};
+
+
+
+
+// 2. DB接続します tryはチャレンジする的な感じ PDOはデータベースに接続するための設定を書いてね。
 try {
-  //デフォルトPassword:MAMP='root',XAMPP=''
-  $pdo = new PDO('mysql:dbname=tk_db;charset=utf8;host=localhost','root','root');
+  //Password:MAMP='root',XAMPP=''
+  $pdo = new PDO('mysql:dbname=gs_db;charset=utf8;host=localhost','root','root');
 } catch (PDOException $e) {
   exit('DBConnectError:'.$e->getMessage());
 }
@@ -20,18 +22,14 @@ try {
 
 // ３．SQL文を用意(データ登録：INSERT)
 $stmt = $pdo->prepare(
-  "INSERT INTO tk_an_table(id, title, purpose, finding, todo, review1, review2)
-  VALUES(NULL,:title,:purpose,:finding,:todo, :review1,:review2)"
+  "INSERT INTO  gs_an_table ( id, name, email, naiyou, indate)
+  VALUES( NULL, :name, :email, :naiyou, sysdate() )"
 );
 
-// 4. バインド変数を用意（エスケープ処理というハッキング対策を行う）
-$stmt->bindValue(':title', $title, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-$stmt->bindValue(':purpose', $purpose, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-$stmt->bindValue(':finding', $finding, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-$stmt->bindValue(':todo', $todo, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-$stmt->bindValue(':review1', $review1, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-$stmt->bindValue(':review2', $review2, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
-
+// 4. バインド変数を用意
+$stmt->bindValue(':name', $name, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
+$stmt->bindValue(':email', $email, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
+$stmt->bindValue(':naiyou', $naiyou, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
 
 // 5. 実行
 $status = $stmt->execute();
@@ -43,6 +41,7 @@ if($status==false){
   exit("ErrorMassage:".$error[2]);
 }else{
   //５．index.phpへリダイレクト
-  header('Location: lreader.php');
+  header('Location: index.php');
+  
 }
 ?>
