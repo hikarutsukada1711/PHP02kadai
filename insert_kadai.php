@@ -11,20 +11,17 @@ $comment = $_POST{"comment"};
 
 
 
-// 2. DB接続します tryはチャレンジする的な感じ PDOはデータベースに接続するための設定を書いてね。
-try {
-  //Password:MAMP='root',XAMPP=''
-  $pdo = new PDO('mysql:dbname=new_kadai;charset=utf8;host=localhost','root','root');
-} catch (PDOException $e) {
-  exit('DBConnectError:'.$e->getMessage());
-}
+//2. DB接続します
+//以下を関数化！ funcs参照。
+require_once('funcs.php');
+$pdo = db_conn(); //関数の呼び出し
 
-
-// ３．SQL文を用意(データ登録：INSERT)
+//３．SQL文を用意(データ登録：INSERT)
 $stmt = $pdo->prepare(
   "INSERT INTO  gs_bm_table ( id, bookname, bookurl, comment, indate)
   VALUES( NULL, :bookname, :bookurl, :comment, sysdate() )"
 );
+
 
 // 4. バインド変数を用意
 $stmt->bindValue(':bookname', $bookname, PDO::PARAM_STR);  //Integer（数値の場合 PDO::PARAM_INT)
@@ -34,14 +31,15 @@ $stmt->bindValue(':comment', $comment, PDO::PARAM_STR);  //Integer（数値の�
 // 5. 実行
 $status = $stmt->execute();
 
-// 6．データ登録処理後
+//6．データ登録処理後
 if($status==false){
   //SQL実行時にエラーがある場合（エラーオブジェクト取得して表示）
-  $error = $stmt->errorInfo();
-  exit("ErrorMassage:".$error[2]);
+  //以下を関数化
+  sql_error($stmt);  
 }else{
   //５．index.phpへリダイレクト
-  header('Location: index_kadai.php');
-  
+  //以下を関数化
+  redirect('index_kadai.php');
+
 }
 ?>
