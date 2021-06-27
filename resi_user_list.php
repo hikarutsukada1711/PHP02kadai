@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>データ登録</title>
+  <title>ユーザー登録</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
   <style>div{padding: 10px;font-size:16px;}</style>
 </head>
@@ -21,13 +21,15 @@
 <!-- Head[End] -->
 
 <!-- Main[Start] -->
-<form method="POST" action="insert_kadai.php">
+<form method="POST" action="insert_user_list.php">
   <div class="jumbotron">
    <fieldset>
-    <legend>本をブックマークする</legend>
-     <label>書籍名：<input type="text" name="bookname"></label><br>
-     <label>書籍URL：<input type="text" name="bookurl"></label><br>
-     <label><textArea name="comment" rows="4" cols="40"></textArea></label><br>
+    <legend>ユーザー登録</legend>
+     <label>ユーザー名：<input type="text" name="name"></label><br>
+     <label>ID<input type="text" name="lid"></label><br>
+     <label>PW<input type="text" name="lpw"></label><br>
+     <label>管理フラグ<input type="int" name="kanri_flg"></label><br>
+     <label>ライフフラグ<input type="int" name="life_flg"></label><br> 
      <input type="submit" value="送信">
     </fieldset>
   </div>
